@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Card, Form, Button, Container } from "react-bootstrap";
@@ -8,6 +8,19 @@ const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    console.log("userData", userData);
+
+    if (userData) {
+      if (userData.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/user/dashboard");
+      }
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -35,10 +48,22 @@ const Login = () => {
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <Container
+      style={{
+        minHeight: "100vh", // Full screen height
+        minWidth: "100vw", // Full screen width
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Card
         className="shadow-lg p-4"
-        style={{ width: "350px", borderRadius: "10px" }}
+        style={{
+          width: "350px",
+          borderRadius: "10px",
+          backgroundColor: "white",
+        }}
       >
         <Card.Body>
           <h2 className="text-center text-primary mb-4">Quiz App Login</h2>

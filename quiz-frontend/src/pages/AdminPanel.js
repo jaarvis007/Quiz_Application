@@ -21,6 +21,11 @@ const AdminPanel = () => {
 
   useEffect(() => {
     const fetchQuizzes = async () => {
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      if (userData.role !== "admin") {
+        window.location.href = "/user/dashboard";
+      }
+
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get("http://localhost:3000/api/quizzes", {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Card, Form, Button, Container } from "react-bootstrap";
@@ -10,6 +10,19 @@ const Signup = () => {
   const [role, setRole] = useState("USER"); // Default role
   const navigate = useNavigate();
 
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    console.log("userData", userData);
+
+    if (userData) {
+      if (userData.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/user/dashboard");
+      }
+    }
+  }, []);
+
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
@@ -19,14 +32,18 @@ const Signup = () => {
         role,
       });
       alert("Signup successful! Please login.");
-      navigate("/login");
+      navigate("/");
     } catch (error) {
       alert("Error signing up. Please try again.");
     }
   };
 
   return (
-    <Container className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <Container className="d-flex flex-column justify-content-center align-items-center vh-100 ">
+      {/* Added heading outside the login box */}
+      <h1 className="text-primary text-center mb-4 fw-bold">
+        Welcome Back to Sparkl⭐
+      </h1>
       <Card
         className="shadow-lg p-4"
         style={{ width: "350px", borderRadius: "10px" }}
@@ -71,7 +88,7 @@ const Signup = () => {
           <div className="text-center mt-3">
             <small>
               Already have an account?{" "}
-              <a href="/login" className="text-decoration-none text-primary">
+              <a href="/" className="text-decoration-none text-primary">
                 Login
               </a>
             </small>

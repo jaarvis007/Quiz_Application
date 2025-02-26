@@ -15,6 +15,8 @@ const Quiz = () => {
   const navigate = useNavigate();
   const quizData = location.state?.quiz;
 
+  console.log("quizData", quizData);
+
   const [quiz, setQuiz] = useState([]);
   const [showModal, setShowModal] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -36,12 +38,15 @@ const Quiz = () => {
             const response = await axios.get(
               `http://localhost:3000/api/questions/${id}`
             );
+
             return {
-              question: response.data.question[0],
+              question: response.data.question,
               options: response.data.options,
             };
           })
         );
+
+        console.log("responses", responses);
         setQuiz(responses);
       } catch (error) {
         console.error("Error fetching quiz data:", error);
@@ -66,7 +71,7 @@ const Quiz = () => {
     }, 1000);
 
     return () => clearInterval(timerRef.current);
-  }, [quizData]);
+  }, []);
 
   const handleOptionChange = (questionId, option) => {
     setSelectedAnswers({ ...selectedAnswers, [questionId]: option });
@@ -117,42 +122,43 @@ const Quiz = () => {
           <FaTrophy size={20} className="text-warning me-2" /> Score: {score}
         </div>
         <ul className="list-group mt-3">
-          {quiz.map((q, index) => (
-            <li
-              key={q.question.id}
-              className={`list-group-item ${
-                submitted && selectedAnswers[q.question.id] === 1
-                  ? "bg-success text-white"
-                  : ""
-              }`}
-            >
-              <strong>
-                Q{index + 1}: {q.question.question}
-              </strong>
-              <ul className="mt-2">
-                {q.options.map((opt) => (
-                  <li key={opt.id} className="list-unstyled">
-                    <input
-                      type="radio"
-                      name={`question-${q.question.id}`}
-                      value={opt.id}
-                      id={`option-${opt.id}`}
-                      disabled={submitted}
-                      onChange={() =>
-                        handleOptionChange(q.question.id, opt.is_correct)
-                      }
-                    />
-                    <label htmlFor={`option-${opt.id}`} className="ms-2">
-                      {opt.option_text}{" "}
-                      {submitted && opt.is_correct ? (
-                        <FaCheckCircle className="text-success ms-1" />
-                      ) : null}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
+          {quiz.length &&
+            quiz.map((q, index) => (
+              <li
+                key={q.question.id}
+                className={`list-group-item ${
+                  submitted && selectedAnswers[q.question.id] === 1
+                    ? "bg-success text-white"
+                    : ""
+                }`}
+              >
+                <strong>
+                  Q{index + 1}: {q.question.question}
+                </strong>
+                <ul className="mt-2">
+                  {q.options.map((opt) => (
+                    <li key={opt.id} className="list-unstyled">
+                      <input
+                        type="radio"
+                        name={`question-${q.question.id}`}
+                        value={opt.id}
+                        id={`option-${opt.id}`}
+                        disabled={submitted}
+                        onChange={() =>
+                          handleOptionChange(q.question.id, opt.is_correct)
+                        }
+                      />
+                      <label htmlFor={`option-${opt.id}`} className="ms-2">
+                        {opt.option_text}{" "}
+                        {submitted && opt.is_correct ? (
+                          <FaCheckCircle className="text-success ms-1" />
+                        ) : null}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
         </ul>
 
         {!submitted ? (

@@ -14,7 +14,7 @@ function App() {
       <div className="container" style={{ marginTop: "80px" }}>
         {/* Add margin-top to prevent content from being hidden */}
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/admin/dashboard" element={<AdminPanel />} />
           <Route path="/quiz/:id" element={<Quiz />} />

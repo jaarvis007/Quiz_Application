@@ -12,6 +12,10 @@ const UserDashboard = () => {
 
   useEffect(() => {
     const fetchQuizzes = async () => {
+      const userData = JSON.parse(localStorage.getItem("userData"));
+      if (userData.role === "admin") {
+        window.location.href = "/admin/dashboard";
+      }
       try {
         const response = await axios.get("http://localhost:3000/api/quizzes");
         setQuizzes(response.data.quizzes);
