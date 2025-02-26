@@ -10,10 +10,8 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-// Export the promise-based pool
 module.exports = pool.promise();
 
-// Example to connect and query
 async function connectToDatabase() {
   try {
     const [rows, fields] = await pool
